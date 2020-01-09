@@ -8,14 +8,14 @@ let should = chai.should();
 chai.use(chaiHttp);
 
 const mockUser = {
-  userName: 'test',
+  userName: 'test2',
   password: 'bc1M4j2I4u6VaLpUbAB8Y9kTHBs=',
-  email: 'test@test.com',
+  email: 'test2@test.com',
 };
 
 const userToAuthenticate = {
-  email: mockUser.email,
-  password: mockUser.password,
+  email: 'test@test.com',
+  password: 'bc1M4j2I4u6VaLpUbAB8Y9kTHBs=',
 };
 
 describe('Users', () => {
@@ -58,6 +58,7 @@ describe('Users', () => {
         .send(userToAuthenticate)
         .end((err, res) => {
           token = res.body.token;
+          console.log(token);
           done();
         });
     });
@@ -69,13 +70,13 @@ describe('Users', () => {
         .end((err, res) => {
           // res.should.have.status(200);
           // res.should.have.property('array');
-          assert(res.header.statusCode === 200, "nu e 200");
+          res.should.have.status(200);
           // assert(res.body, Array);
           done();
         });
     });
 
-    let createdUserId = null;
+    let createdEmployeeId = null;
 
     it('should create a new user', done => {
       chai.request(server)
@@ -83,7 +84,7 @@ describe('Users', () => {
         .send(mockUser)
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
-          createdUserId = res.body.id;
+          createdEmployeeId = res.body.id;
           res.should.have.status(201);
           done();
         })
@@ -92,7 +93,7 @@ describe('Users', () => {
 
     it('should list one user', done => {
       chai.request(server)
-        .get('/employees/' + createdUserId)
+        .get('/employees/' + createdEmployeeId)
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
           res.should.have.status(200);
@@ -102,7 +103,7 @@ describe('Users', () => {
 
     it('should update the user', done => {
       chai.request(server)
-        .put('/employees/' + createdUserId)
+        .put('/employees/' + createdEmployeeId)
         .send({
           ...mockUser,
           firstName: 'UpdatedName',
@@ -117,7 +118,7 @@ describe('Users', () => {
 
     it('should delete the user', done => {
       chai.request(server)
-        .delete('/employees/' + createdUserId)
+        .delete('/employees/' + createdEmployeeId)
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
           res.should.have.status(200);
