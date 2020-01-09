@@ -8,22 +8,21 @@ let should = chai.should();
 chai.use(chaiHttp);
 
 const mockUser = {
-  firstName: 'John',
-  lastName: 'Doe',
-  password: 'test1234',
-  email: 'john.was.here@clopotel.ro',
+  userName: 'test',
+  password: 'bc1M4j2I4u6VaLpUbAB8Y9kTHBs=',
+  email: 'test@test.com',
 };
 
 const userToAuthenticate = {
-  email: 'mauris@pellentesquetellus.org',
-  password: 'parola123',
+  email: mockUser.email,
+  password: mockUser.password,
 };
 
 describe('Users', () => {
   describe('[unauthenticated] User', () => {
     it('should not list all users', done => {
       chai.request(server)
-        .get('/users')
+        .get('/employees')
         .end((err, res) => {
           res.should.have.status(401);
           done();
@@ -32,7 +31,7 @@ describe('Users', () => {
 
     it('should not list a user', done => {
       chai.request(server)
-        .get('/users/106')
+        .get('/employees/1')
         .end((err, res) => {
           res.should.have.status(401);
           done();
@@ -41,7 +40,7 @@ describe('Users', () => {
 
     it('should not create a user', done => {
       chai.request(server)
-        .post('/users')
+        .post('/employees')
         .send(mockUser)
         .end((err, res) => {
           res.should.have.status(401);
@@ -65,7 +64,7 @@ describe('Users', () => {
 
     it('should list all users', done => {
       chai.request(server)
-        .get('/users')
+        .get('/employees')
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
           // res.should.have.status(200);
@@ -80,7 +79,7 @@ describe('Users', () => {
 
     it('should create a new user', done => {
       chai.request(server)
-        .post('/users')
+        .post('/employees')
         .send(mockUser)
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
@@ -93,7 +92,7 @@ describe('Users', () => {
 
     it('should list one user', done => {
       chai.request(server)
-        .get('/users/' + createdUserId)
+        .get('/employees/' + createdUserId)
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
           res.should.have.status(200);
@@ -103,7 +102,7 @@ describe('Users', () => {
 
     it('should update the user', done => {
       chai.request(server)
-        .put('/users/' + createdUserId)
+        .put('/employees/' + createdUserId)
         .send({
           ...mockUser,
           firstName: 'UpdatedName',
@@ -118,7 +117,7 @@ describe('Users', () => {
 
     it('should delete the user', done => {
       chai.request(server)
-        .delete('/users/' + createdUserId)
+        .delete('/employees/' + createdUserId)
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
           res.should.have.status(200);

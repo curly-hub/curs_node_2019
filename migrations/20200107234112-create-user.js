@@ -1,7 +1,4 @@
 'use strict';
-
-// Migratia initiala care defineste field-urile din tabela Users
-// `npx sequelize db:migrate` pentru a rula migratia
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Users', {
@@ -11,13 +8,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      firstName: {
+      userName: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      lastName: {
+      password: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       email: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {
