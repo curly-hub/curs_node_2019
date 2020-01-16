@@ -20,6 +20,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      employeeId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'Employees'
+          },
+          key: 'id',
+        },
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL',
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

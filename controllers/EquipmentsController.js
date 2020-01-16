@@ -31,7 +31,7 @@ const EquipmentsController = {
       })
       .then(data => {
         if(!data) {
-            res.send(data);
+          return res.status(404).send({});
         }
         res.send(data);
       });
@@ -42,34 +42,17 @@ const EquipmentsController = {
     const sqllite_date = date.toISOString();
     const body = req.body;
     models
-      .Employee
+      .Equipment
       .create({
-        firstName: body.firstName,
-        lastName: body.lastName,
-        department: body.department,
-        email: body.email,
-        hireDate: body.hireDate,
-        position: body.position,
-        location: body.location,
-        managerId: body.managerId
-      }, {
-        include: [ 
-          {
-            association: 'manager', 
-            attributes: ['firstName', 'lastName']
-          }
-        ]
+        name: body.name,
+        model: body.model,
+        serial: body.serial,
+        type: body.type,
       })
-      .then(employee => {
+      .then(equipment => {
         models
-        .Employee
-        .findByPk(employee.id, {
-          include: [ 
-            {
-              association: 'manager', 
-              attributes: ['firstName', 'lastName']
-            }
-          ]
+        .Equipment
+        .findByPk(equipment.id, {
         })
         .then(data => res.status(201).send(data));
       });
@@ -78,26 +61,28 @@ const EquipmentsController = {
     const body = req.body;
     const id = req.params.id;
     models
-      .Employee
-      .update(body, { where: { id: id }})
+      .Equipment
+      .update(
+        {name: body.name,
+        model: body.model,
+        serial: body.serial,
+        type: body.type}, { where: { id: id }})
       .then(updated => {
+        if(updated[0] == 0) {
+          return res.status(400).send({});
+        } else {
         models
-          .Employee
+          .Equipment
           .findByPk(id, {
-            include: [ 
-              {
-                association: 'manager', 
-                attributes: ['firstName', 'lastName']
-              }
-            ]
           })
           .then(data => res.send(data));
+        }
       });
   },
   delete: (req, res) => {
     const id = req.params.id;
     models
-      .Employee
+      .Equipment
       .destroy({
         where: {
           id: id
@@ -107,6 +92,21 @@ const EquipmentsController = {
         return res.status(204).send();
       })
   },
+  assign: (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
+    models.Equipment.update({employeeId: body.employeeId}, { where: { id: id }}).then(updated => {
+      if(updated[0] == 0) {
+        return res.status(400).send({});
+      } else {
+      models
+        .Equipment
+        .findByPk(id, {
+        })
+        .then(data => res.send(data));
+      }
+    });
+  }
 };
 
 module.exports = EquipmentsController;

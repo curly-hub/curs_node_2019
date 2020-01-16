@@ -10,6 +10,9 @@ const EmployeesController = {
           {
             association: 'manager', 
             attributes: ['firstName', 'lastName']
+          },
+          {
+            association: 'equipments'
           }
         ]
       })
@@ -28,12 +31,15 @@ const EmployeesController = {
           {
             association: 'manager', 
             attributes: ['firstName', 'lastName']
+          },
+          {
+            association: 'equipments'
           }
         ]
       })
       .then(data => {
         if(!data) {
-            res.send(data);
+          return res.status(404).send({});
         }
         res.send(data);
       });
@@ -59,6 +65,9 @@ const EmployeesController = {
           {
             association: 'manager', 
             attributes: ['firstName', 'lastName']
+          },
+          {
+            association: 'equipments'
           }
         ]
       })
@@ -70,6 +79,9 @@ const EmployeesController = {
             {
               association: 'manager', 
               attributes: ['firstName', 'lastName']
+            },
+            {
+              association: 'equipments'
             }
           ]
         })
@@ -90,6 +102,9 @@ const EmployeesController = {
               {
                 association: 'manager', 
                 attributes: ['firstName', 'lastName']
+              },
+              {
+                association: 'equipments'
               }
             ]
           })
@@ -109,5 +124,17 @@ const EmployeesController = {
         return res.status(204).send();
       })
   },
+  getEquipments: (req, res) => {
+    const id = req.params.id;
+    models.Equipment.findAll({
+      where: { employeeId: id }
+    }).then(data => {
+      console.log(data);
+      if(!data) {
+        return res.status(404).send({});
+      }
+      res.send(data);
+    });
+  }
 };
 module.exports = EmployeesController;

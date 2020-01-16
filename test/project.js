@@ -13,24 +13,15 @@ const userToAuthenticate = {
   password: 'A',
 };
 
-
-mockEmployee = {
-  firstName: 'test',
-  lastName:'last_test',
-  department: 'test',
-  hireDate: '2019-11-09 01:02:43.115 +00:00',
-  position: 'pro',
-  location: 'Buc',
-  managerId: null,
-  createdAt: '2019-11-09 01:02:43.115 +00:00',
-  updatedAt: '2019-11-09 01:02:43.115 +00:00'
+mockProject = {
+    name: 'test'
 }
 
-describe('Users', () => {
-  describe('[unauthenticated] User - Employees', () => {
-    it('should not list all employees', done => {
+describe('Project', () => {
+  describe('[unauthenticated] User - Project', () => {
+    it('should not list all users', done => {
       chai.request(server)
-        .get('/employees')
+        .get('/projects')
         .end((err, res) => {
           res.should.have.status(401);
           done();
@@ -39,7 +30,7 @@ describe('Users', () => {
 
     it('should not list a employee', done => {
       chai.request(server)
-        .get('/employees/1')
+        .get('/projects/1')
         .end((err, res) => {
           res.should.have.status(401);
           done();
@@ -48,7 +39,7 @@ describe('Users', () => {
 
     it('should not create a employee', done => {
       chai.request(server)
-        .post('/employees')
+        .post('/projects')
         .send(mockEmployee)
         .end((err, res) => {
           res.should.have.status(401);
@@ -58,7 +49,7 @@ describe('Users', () => {
 
     it('should not create a employee', done => {
       chai.request(server)
-        .post('/employees')
+        .post('/projects')
         .send(mockEmployee)
         .end((err, res) => {
           res.should.have.status(401);
@@ -68,7 +59,7 @@ describe('Users', () => {
 
   });
 
-  describe('[authenticated] User - Employees', () => {
+  describe('[authenticated] User - Equipments', () => {
     let token = null;
 
     beforeEach(done => {
@@ -81,66 +72,80 @@ describe('Users', () => {
         });
     });
 
-    it('should list all employee', done => {
+    let createdProjectId = null;
+
+    it('should create a new equipment', done => {
       chai.request(server)
-        .get('/employees')
+        .post('/projects')
+        .send(mockProject)
+        .set({ Authorization: 'Bearer ' + token })
+        .end((err, res) => {
+            createdProjectId = res.body.id;
+            res.should.have.status(201);
+            done();
+        })
+    });
+
+    it('should list all projects', done => {
+      chai.request(server)
+        .get('/projects')
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
           let count = res.body.length
-          expect(count, 'expect count of all employee to be 20').to.equal(20);
+          expect(count, 'expect count of all projects to be 1').to.equal(1);
           done();
         });
     });
 
-    let createdEmployeeId = null;
 
-    it('should create a new employee', done => {
+
+    it('should list one equipment', done => {
       chai.request(server)
-        .post('/employees')
-        .send(mockEmployee)
-        .set({ Authorization: 'Bearer ' + token })
-        .end((err, res) => {
-          createdEmployeeId = res.body.id;
-          res.should.have.status(201);
-          done();
-        })
-    });
-
-
-    it('should list one employee', done => {
-      chai.request(server)
-        .get('/employees/' + createdEmployeeId)
+        .get('/projects/' + createdProjectId)
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
           res.should.have.status(200);
-          expect(res.body.lastName, 'expect last name to be').to.equal(mockEmployee.lastName);
+          expect(res.body.name, 'expect last name to be').to.equal(mockEquipment.name);
           done();
         });
     });
 
-    it('should update the employee', done => {
+    it('should update the project', done => {
       chai.request(server)
-        .put('/employees/' + createdEmployeeId)
+        .put('/projects/' + createdProjectId)
         .send({
-          firstName: 'UpdatedName',
-          lastName: 'TestUpdate',
+            name: 'UpdatedName'
         })
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
-          expect(res.body.lastName, 'expect last name to be').to.equal('TestUpdate');
+          expect(res.body.name, 'expect name to be').to.equal('UpdatedName');
           res.should.have.status(200);
           done();
         })
     });
 
-    it('should delete the employee', done => {
+    it('should assign the project', done => {
+        chai.request(server)
+          .put('/projects/'+createdProjectId+'/assign')
+          .send({
+              employeeId: 1
+          })
+          .set({ Authorization: 'Bearer ' + token })
+          .end((err, res) => {
+            expect(res.body.employees.length, 'expect employeeId to be').to.equal(1);
+            res.should.have.status(200);
+            done();
+          })
+      });
+
+    it('should delete the equipment', done => {
       chai.request(server)
-        .delete('/employees/' + createdEmployeeId)
+        .delete('/projects/' + createdProjectId)
         .set({ Authorization: 'Bearer ' + token })
         .end((err, res) => {
           res.should.have.status(204);
           done();
-        })
-    })
+        });
+    });
   });
 });

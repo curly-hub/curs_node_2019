@@ -1,6 +1,7 @@
 const express = require('express');
-const usersController = require('./controllers/EmployeesController');
+const EmployeesController = require('./controllers/EmployeesController');
 const equipmentsController = require('./controllers/EquipmentsController');
+const projectController = require('./controllers/ProjectController');
 const authenticationController = require('./controllers/AuthenticationController');
 const authenticationMiddleware = require('./middlewares/authentication');
 
@@ -14,21 +15,30 @@ const router = express.Router();
 
 router.use('/employees', authenticationMiddleware);
 
-router.get('/employees', usersController.index);
-router.post('/employees', usersController.create);
-router.get('/employees/:id', usersController.show);
-router.put('/employees/:id', usersController.update);
-router.delete('/employees/:id', usersController.delete);
+router.get('/employees',                EmployeesController.index);
+router.post('/employees',               EmployeesController.create);
+router.get('/employees/:id',            EmployeesController.show);
+router.put('/employees/:id',            EmployeesController.update);
+router.delete('/employees/:id',         EmployeesController.delete);
+router.get('/employees/:id/equipments', EmployeesController.getEquipments)
 
-//router.get('/employees/:id/equipments', usersController.getEquipments)
+router.use('/equipments', authenticationMiddleware);
 
-//router.use('/equipments', authenticationMiddleware);
+router.get('/equipments',               equipmentsController.index);
+router.get('/equipments/:id',           equipmentsController.show);
+router.post('/equipments',              equipmentsController.create);
+router.put('/equipments/:id',           equipmentsController.update);
+router.put('/equipments/:id/assign',    equipmentsController.assign);
+router.delete('/equipments/:id',        equipmentsController.delete);
 
-router.get('/equipments', equipmentsController.index);
-
-
+router.use('/projects', authenticationMiddleware);
+router.get('/projects',                 projectController.index);
+router.get('/projects/:id',             projectController.show);
+router.post('/projects',                projectController.create);
+router.put('/projects/:id',             projectController.update);
+router.put('/projects/:id/assign',      projectController.assignEmployee);
+router.delete('/projects/:id',          projectController.delete);
 /*
-
   Middleware-ul de autentificare nu ar trebui sa fie luat in considerare pe ruta /login.
   Nu ar mai fi posibila autentificarea.
 */

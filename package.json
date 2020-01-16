@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "pretest": "npm run env NODE_ENV=test",
-    "test": "sequelize-cli db:migrate --env=test&&mocha --timeout 10000",
-    "start": "npm run env NODE_ENV=development nodemon index.js"
+    "test": "mocha --timeout 10000",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",

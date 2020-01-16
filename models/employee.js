@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
     department: DataTypes.STRING,
-    email: DataTypes.STRING,
     hireDate: DataTypes.DATE,
     position: DataTypes.STRING,
     location: DataTypes.STRING,
@@ -14,7 +13,12 @@ module.exports = (sequelize, DataTypes) => {
   });
   Employee.associate = function(models) {
     Employee.hasOne(Employee, {as: "manager", sourceKey: "managerId", foreignKey: "id"});
-    Employee.hasMany(models.Equipment, {as: "equipment", sourceKey: "id", foreignKey: "employeeId"})
+    Employee.hasMany(models.Equipment, {as: "equipments", sourceKey: "id", foreignKey: "employeeId"});
+    Employee.belongsToMany(models.Project, {
+      through: 'ProjectEmployees',
+      as: 'projects',
+      foreignKey: 'employeeId'
+    });
   };
   return Employee;
 };
