@@ -19,7 +19,7 @@ mockProject = {
 
 describe('Project', () => {
   describe('[unauthenticated] User - Project', () => {
-    it('should not list all users', done => {
+    it('should not list all projects', done => {
       chai.request(server)
         .get('/projects')
         .end((err, res) => {
@@ -28,7 +28,7 @@ describe('Project', () => {
         });
     });
 
-    it('should not list a employee', done => {
+    it('should not list a project', done => {
       chai.request(server)
         .get('/projects/1')
         .end((err, res) => {
@@ -37,17 +37,17 @@ describe('Project', () => {
         })
     });
 
-    it('should not create a employee', done => {
+    it('should not create a project', done => {
       chai.request(server)
         .post('/projects')
-        .send(mockEmployee)
+        .send(mockProject)
         .end((err, res) => {
           res.should.have.status(401);
           done();
         });
     })
 
-    it('should not create a employee', done => {
+    it('should not create a project', done => {
       chai.request(server)
         .post('/projects')
         .send(mockEmployee)
@@ -59,7 +59,7 @@ describe('Project', () => {
 
   });
 
-  describe('[authenticated] User - Equipments', () => {
+  describe('[authenticated] User - Projects', () => {
     let token = null;
 
     beforeEach(done => {
@@ -74,7 +74,7 @@ describe('Project', () => {
 
     let createdProjectId = null;
 
-    it('should create a new equipment', done => {
+    it('should create a new project', done => {
       chai.request(server)
         .post('/projects')
         .send(mockProject)
@@ -99,7 +99,7 @@ describe('Project', () => {
 
 
 
-    it('should list one equipment', done => {
+    it('should list one project', done => {
       chai.request(server)
         .get('/projects/' + createdProjectId)
         .set({ Authorization: 'Bearer ' + token })
@@ -138,7 +138,7 @@ describe('Project', () => {
           })
       });
 
-    it('should delete the equipment', done => {
+    it('should delete the project', done => {
       chai.request(server)
         .delete('/projects/' + createdProjectId)
         .set({ Authorization: 'Bearer ' + token })

@@ -26,7 +26,7 @@ mockEmployee = {
   updatedAt: '2019-11-09 01:02:43.115 +00:00'
 }
 
-describe('Users', () => {
+describe('Employees', () => {
   describe('[unauthenticated] User - Employees', () => {
     it('should not list all employees', done => {
       chai.request(server)

@@ -25,7 +25,7 @@ mockEquipment = {
 
 describe('Equipments', () => {
   describe('[unauthenticated] User - Equipments', () => {
-    it('should not list all users', done => {
+    it('should not list all equipments', done => {
       chai.request(server)
         .get('/equipments')
         .end((err, res) => {
@@ -34,7 +34,7 @@ describe('Equipments', () => {
         });
     });
 
-    it('should not list a employee', done => {
+    it('should not list an equipment', done => {
       chai.request(server)
         .get('/equipments/1')
         .end((err, res) => {
@@ -43,20 +43,20 @@ describe('Equipments', () => {
         })
     });
 
-    it('should not create a employee', done => {
+    it('should not create a equipment', done => {
       chai.request(server)
         .post('/equipments')
-        .send(mockEmployee)
+        .send(mockEquipment)
         .end((err, res) => {
           res.should.have.status(401);
           done();
         });
     })
 
-    it('should not create a employee', done => {
+    it('should not create a equipment', done => {
       chai.request(server)
         .post('/equipments')
-        .send(mockEmployee)
+        .send(mockEquipment)
         .end((err, res) => {
           res.should.have.status(401);
           done();
